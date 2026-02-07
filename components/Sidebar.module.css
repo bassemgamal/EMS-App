@@ -1,0 +1,61 @@
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: var(--bg-card);
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    padding: 2rem;
+    color: var(--primary);
+}
+
+.logo h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.nav {
+    flex: 1;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.navItem:hover {
+    background: var(--bg-main);
+    color: var(--primary);
+    transform: translateX(-4px);
+}
+
+.active {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary);
+}
+
+.icon {
+    margin-left: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.name {
+    font-size: 0.9375rem;
+}

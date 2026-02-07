@@ -1,0 +1,60 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+}
+
+.saveBtn {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.scoreBadge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    background: color-mix(in srgb, var(--score-color), transparent 90%);
+    color: var(--score-color);
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+.notesTd {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delBtn {
+    color: var(--danger);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.delBtn:hover {
+    text-decoration: underline;
+}
