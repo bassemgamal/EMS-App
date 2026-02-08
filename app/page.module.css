@@ -73,8 +73,10 @@
 
 .table {
   width: 100%;
-  border-collapse: collapse;
-  text-align: left;
+  border-collapse: separate;
+  /* Required for sticky border-spacing */
+  border-spacing: 0;
+  text-align: right;
 }
 
 .table th {
@@ -87,6 +89,8 @@
 .table td {
   padding: 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+  /* Prevent content from wrapping and causing height issues */
 }
 
 .status {
@@ -102,6 +106,16 @@
   color: var(--success);
 }
 
+.status.delegated {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--accent);
+}
+
+.status.retired {
+  background: rgba(100, 116, 139, 0.1);
+  color: var(--secondary);
+}
+
 .status.inactive {
   background: rgba(239, 68, 68, 0.1);
   color: var(--danger);
@@ -111,8 +125,151 @@
   color: var(--primary);
   font-weight: 600;
   font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .editBtn:hover {
   text-decoration: underline;
+}
+
+.deleteBtn {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.deleteBtn:hover {
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Sticky Actions Column - Adjusted for RTL Left side */
+.table th:last-child,
+.table td:last-child {
+  position: sticky;
+  left: 0;
+  background: var(--bg-card);
+  /* Match card background */
+  z-index: 10;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
+  /* Shadow on the right side of the left-stuck column */
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  /* Explicit border for separation */
+}
+
+.table th:last-child {
+  z-index: 11;
+  background: var(--bg-main);
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal {
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-xl);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h2 {
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.formGroup input,
+.formGroup select {
+  padding: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  outline: none;
+}
+
+.formGroup input:focus {
+  border-color: var(--primary);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.saveBtn {
+  background: var(--primary);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+
+.cancelBtn {
+  background: #f3f4f6;
+  color: var(--text-main);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

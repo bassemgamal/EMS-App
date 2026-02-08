@@ -10,7 +10,7 @@
   --accent: #38bdf8;
   --danger: #ef4444;
   --success: #22c55e;
-  
+
   /* Spacing & Borders */
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -18,7 +18,7 @@
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  
+
   /* Transitions */
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -58,10 +58,40 @@ button {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Global Utilities */
+.delBtn {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.delBtn:hover {
+  text-decoration: underline;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.875rem;
 }

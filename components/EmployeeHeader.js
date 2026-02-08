@@ -22,7 +22,7 @@ const EmployeeHeader = () => {
                 </div>
             </div>
             <div className={styles.badge}>
-                {activeEmployee.employment_status || 'Active'}
+                {activeEmployee.employment_status || 'نشط'}
             </div>
         </div>
     );

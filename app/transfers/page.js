@@ -43,6 +43,14 @@ export default function TransfersPage() {
         } catch (error) { console.error('Save failed:', error); } finally { setSaving(false); }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        try {
+            await fetch(`http://localhost:5001/api/details/transfers/${id}`, { method: 'DELETE' });
+            fetchRecords();
+        } catch (error) { console.error('Delete failed:', error); }
+    };
+
     if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
 
     return (
@@ -68,7 +76,7 @@ export default function TransfersPage() {
                     {loading ? <p>جاري التحميل...</p> : (
                         <table className={styles.table}>
                             <thead>
-                                <tr><th>النوع</th><th>من</th><th>إلى</th><th>التاريخ</th></tr>
+                                <tr><th>النوع</th><th>من</th><th>إلى</th><th>التاريخ</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody>
                                 {records.map(reg => (
@@ -77,6 +85,9 @@ export default function TransfersPage() {
                                         <td>{reg.from_workplace}</td>
                                         <td>{reg.to_workplace}</td>
                                         <td>{new Date(reg.transfer_date).toLocaleDateString()}</td>
+                                        <td>
+                                            <button onClick={() => handleDelete(reg.transfer_id)} className={styles.delBtn}>حذف</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

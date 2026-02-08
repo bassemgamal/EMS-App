@@ -47,7 +47,7 @@ export default function AppointmentsPage() {
                     {saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}
                 </button>
             }>
-                {loading ? <p>Loading...</p> : (
+                {loading ? <p>جاري التحميل...</p> : (
                     <div className={styles.grid}>
                         <FormField label="القرار" value={formData.appointment_decision} onChange={(e) => setFormData({ ...formData, appointment_decision: e.target.value })} />
                         <FormField label="تاريخ القرار" type="date" value={formData.appointment_decision_date} onChange={(e) => setFormData({ ...formData, appointment_decision_date: e.target.value })} />

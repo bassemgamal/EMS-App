@@ -41,6 +41,14 @@ export default function LeavesPage() {
         } catch (error) { console.error('Save failed:', error); } finally { setSaving(false); }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        try {
+            await fetch(`http://localhost:5001/api/details/leaves/${id}`, { method: 'DELETE' });
+            fetchRecords();
+        } catch (error) { console.error('Delete failed:', error); }
+    };
+
     if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
 
     return (
@@ -60,10 +68,10 @@ export default function LeavesPage() {
                     </form>
                 </Card>
                 <Card title="سجل الإجازات">
-                    {loading ? <p>Loading...</p> : (
+                    {loading ? <p>جاري التحميل...</p> : (
                         <table className={styles.table}>
                             <thead>
-                                <tr><th>النوع</th><th>البداية</th><th>النهاية</th><th>الحالة</th></tr>
+                                <tr><th>النوع</th><th>البداية</th><th>النهاية</th><th>الحالة</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody>
                                 {records.map(reg => (
@@ -72,6 +80,9 @@ export default function LeavesPage() {
                                         <td>{new Date(reg.start_date).toLocaleDateString()}</td>
                                         <td>{new Date(reg.end_date).toLocaleDateString()}</td>
                                         <td><span className={styles.statusBadge}>{reg.status}</span></td>
+                                        <td>
+                                            <button onClick={() => handleDelete(reg.leave_id)} className={styles.delBtn}>حذف</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

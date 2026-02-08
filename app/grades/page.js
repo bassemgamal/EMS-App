@@ -39,6 +39,14 @@ export default function GradesPage() {
         } catch (error) { console.error('Save failed:', error); } finally { setSaving(false); }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        try {
+            await fetch(`http://localhost:5001/api/details/grades/${id}`, { method: 'DELETE' });
+            fetchRecords();
+        } catch (error) { console.error('Delete failed:', error); }
+    };
+
     if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
 
     return (
@@ -54,10 +62,10 @@ export default function GradesPage() {
                     </form>
                 </Card>
                 <Card title="سجل الترقيات">
-                    {loading ? <p>Loading...</p> : (
+                    {loading ? <p>جاري التحميل...</p> : (
                         <table className={styles.table}>
                             <thead>
-                                <tr><th>الدرجة</th><th>التاريخ</th><th>درجة المرتب</th></tr>
+                                <tr><th>الدرجة</th><th>التاريخ</th><th>درجة المرتب</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody>
                                 {records.map(reg => (
@@ -65,6 +73,9 @@ export default function GradesPage() {
                                         <td>{reg.grade_name}</td>
                                         <td>{new Date(reg.promotion_date).toLocaleDateString()}</td>
                                         <td>{reg.salary_grade}</td>
+                                        <td>
+                                            <button onClick={() => handleDelete(reg.grade_id)} className={styles.delBtn}>حذف</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

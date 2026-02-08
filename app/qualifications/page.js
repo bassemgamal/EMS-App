@@ -52,6 +52,14 @@ export default function QualificationsPage() {
         }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        try {
+            await fetch(`http://localhost:5001/api/details/qualifications/${id}`, { method: 'DELETE' });
+            fetchRecords();
+        } catch (error) { console.error('Delete failed:', error); }
+    };
+
     if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
 
     return (
@@ -72,7 +80,7 @@ export default function QualificationsPage() {
                     {loading ? <p>جاري التحميل...</p> : (
                         <table className={styles.table}>
                             <thead>
-                                <tr><th>النوع</th><th>التخصص</th><th>السنة</th><th>المستوى</th></tr>
+                                <tr><th>النوع</th><th>التخصص</th><th>السنة</th><th>المستوى</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody>
                                 {records.map(reg => (
@@ -81,6 +89,9 @@ export default function QualificationsPage() {
                                         <td>{reg.qualification_specialization}</td>
                                         <td>{reg.qualification_year}</td>
                                         <td>{reg.qualification_level}</td>
+                                        <td>
+                                            <button onClick={() => handleDelete(reg.qualification_id)} className={styles.delBtn}>حذف</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

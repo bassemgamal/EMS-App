@@ -62,6 +62,14 @@ export default function ActionsPage() {
         }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        try {
+            await fetch(`http://localhost:5001/api/details/actions/${id}`, { method: 'DELETE' });
+            fetchRecords();
+        } catch (error) { console.error('Delete failed:', error); }
+    };
+
     if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
 
     return (
@@ -92,6 +100,7 @@ export default function ActionsPage() {
                                 <th>تاريخ القرار</th>
                                 <th>جهة الصدور</th>
                                 <th>الحالة</th>
+                                <th>الإجراءات</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,6 +110,9 @@ export default function ActionsPage() {
                                     <td>{new Date(reg.decision_date).toLocaleDateString()}</td>
                                     <td>{reg.authority}</td>
                                     <td>{reg.status}</td>
+                                    <td>
+                                        <button onClick={() => handleDelete(reg.action_id)} className={styles.delBtn}>حذف</button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

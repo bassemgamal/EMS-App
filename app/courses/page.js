@@ -45,6 +45,14 @@ export default function CoursesPage() {
         } catch (error) { console.error('Save failed:', error); } finally { setSaving(false); }
     };
 
+    const handleDelete = async (id) => {
+        if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+        try {
+            await fetch(`http://localhost:5001/api/details/courses/${id}`, { method: 'DELETE' });
+            fetchRecords();
+        } catch (error) { console.error('Delete failed:', error); }
+    };
+
     if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
 
     return (
@@ -65,7 +73,7 @@ export default function CoursesPage() {
                     {loading ? <p>جاري التحميل...</p> : (
                         <table className={styles.table}>
                             <thead>
-                                <tr><th>الاسم</th><th>التاريخ</th><th>المدة</th><th>النتيجة</th></tr>
+                                <tr><th>الاسم</th><th>التاريخ</th><th>المدة</th><th>النتيجة</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody>
                                 {records.map(reg => (
@@ -74,6 +82,9 @@ export default function CoursesPage() {
                                         <td>{new Date(reg.course_date).toLocaleDateString()}</td>
                                         <td>{reg.course_duration}</td>
                                         <td>{reg.course_result}</td>
+                                        <td>
+                                            <button onClick={() => handleDelete(reg.course_id)} className={styles.delBtn}>حذف</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
