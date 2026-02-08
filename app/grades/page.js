@@ -17,9 +17,8 @@ export default function GradesPage() {
         if (!activeEmployee) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/grades`);
             const data = await res.json();
-            setRecords(data);
+            setRecords(Array.isArray(data) ? data : []);
         } catch (error) { console.error('Fetch failed:', error); } finally { setLoading(false); }
     };
 
@@ -71,7 +70,7 @@ export default function GradesPage() {
                                 {records.map(reg => (
                                     <tr key={reg.grade_id}>
                                         <td>{reg.grade_name}</td>
-                                        <td>{new Date(reg.promotion_date).toLocaleDateString()}</td>
+                                        <td>{reg.promotion_date ? new Date(reg.promotion_date).toLocaleDateString('ar-EG') : 'N/A'}</td>
                                         <td>{reg.salary_grade}</td>
                                         <td>
                                             <button onClick={() => handleDelete(reg.grade_id)} className={styles.delBtn}>حذف</button>
