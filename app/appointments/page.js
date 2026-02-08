@@ -12,6 +12,13 @@ export default function AppointmentsPage() {
         appointment_decision: '', appointment_decision_date: '', work_start_date: '',
         management_join_date: '', insurance_card_number: '', insurance_number: ''
     });
+
+    const formatDate = (dateStr) => {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return '';
+        return d.toISOString().split('T')[0];
+    };
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
 
@@ -20,7 +27,16 @@ export default function AppointmentsPage() {
             setLoading(true);
             fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/appointments`)
                 .then(res => res.json())
-                .then(data => { if (data) setFormData(data); })
+                .then(data => {
+                    if (data) {
+                        setFormData({
+                            ...data,
+                            appointment_decision_date: formatDate(data.appointment_decision_date),
+                            work_start_date: formatDate(data.work_start_date),
+                            management_join_date: formatDate(data.management_join_date)
+                        });
+                    }
+                })
                 .finally(() => setLoading(false));
         }
     }, [activeEmployee]);

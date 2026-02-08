@@ -17,7 +17,7 @@ const Sidebar = () => {
         { name: 'التنقلات والندب', path: '/transfers', icon: '↔️' },
         { name: 'الإجازات', path: '/leaves', icon: '📅' },
         { name: 'الدرجات الوظيفية', path: '/grades', icon: '⭐' },
-        { name: 'التعيينات والترقيات', path: '/appointments', icon: '📝' },
+        { name: 'التعيينات والتأمينات', path: '/appointments', icon: '📝' },
     ];
 
     return (

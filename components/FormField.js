@@ -7,7 +7,12 @@ const FormField = ({ label, type = "text", value, onChange, placeholder, options
             {type === "select" ? (
                 <select className={styles.input} value={value} onChange={onChange}>
                     <option value="">اختر {label}...</option>
-                    {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                    {options.map((opt, idx) => {
+                        const isObj = typeof opt === 'object' && opt !== null;
+                        const val = isObj ? opt.value : opt;
+                        const lbl = isObj ? opt.label : opt;
+                        return <option key={val || idx} value={val}>{lbl}</option>;
+                    })}
                 </select>
             ) : type === "textarea" ? (
                 <textarea
