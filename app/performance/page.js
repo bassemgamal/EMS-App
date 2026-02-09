@@ -118,7 +118,7 @@ export default function PerformancePage() {
                                                 <div className={styles.scoreBadge} style={{
                                                     '--score-color': reg.score > 80 ? 'var(--success)' : reg.score > 50 ? 'var(--primary)' : 'var(--danger)'
                                                 }}>
-                                                    {reg.score}%
+                                                    {reg.score}
                                                 </div>
                                             </td>
                                             <td className={styles.notesTd}>{reg.notes}</td>

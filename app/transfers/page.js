@@ -118,7 +118,7 @@ export default function TransfersPage() {
 
                 {/* 2. قسم الإعارة */}
                 <Card title="قسم الإعارة">
-                    <form onSubmit={(e) => { e.preventDefault(); handleAdd('اعارة', secondmentData, () => setSecondmentData({ decision_number: '', transfer_date: '', to_workplace: '' })); }} className={styles.formSection}>
+                    <form onSubmit={(e) => { e.preventDefault(); handleAdd('إعارة', secondmentData, () => setSecondmentData({ decision_number: '', transfer_date: '', to_workplace: '' })); }} className={styles.formSection}>
                         <div className={styles.grid}>
                             <FormField label="رقم القرار" value={secondmentData.decision_number} onChange={(e) => setSecondmentData({ ...secondmentData, decision_number: e.target.value })} required />
                             <FormField label="تاريخ القرار" type="date" value={secondmentData.transfer_date} onChange={(e) => setSecondmentData({ ...secondmentData, transfer_date: e.target.value })} required />
@@ -134,7 +134,7 @@ export default function TransfersPage() {
                                 <tr><th>رقم القرار</th><th>التاريخ</th><th>الجهة</th><th>الإجراءات</th></tr>
                             </thead>
                             <tbody>
-                                {filteredRecords('اعارة').map(r => (
+                                {filteredRecords('إعارة').map(r => (
                                     <tr key={r.transfer_id}>
                                         <td>{r.decision_number}</td>
                                         <td>{r.transfer_date ? new Date(r.transfer_date).toLocaleDateString('ar-EG') : 'N/A'}</td>
