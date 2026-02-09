@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './Sidebar.module.css';
 
-const Sidebar = () => {
+const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const pathname = usePathname();
 
     const menuItems = [
@@ -18,12 +18,19 @@ const Sidebar = () => {
         { name: 'الإجازات', path: '/leaves', icon: '📅' },
         { name: 'الدرجات الوظيفية', path: '/grades', icon: '⭐' },
         { name: 'التعيينات والتأمينات', path: '/appointments', icon: '📝' },
+        { name: 'التقارير والإحصائيات', path: '/reports', icon: '📊' },
     ];
 
     return (
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''} no-print`}>
             <div className={styles.logo}>
-                <h1>نظام إدارة الموظفين</h1>
+                {!isCollapsed && <h1>نظام الموظفين</h1>}
+                <button
+                    className={styles.toggleBtn}
+                    onClick={() => setIsCollapsed(!isCollapsed)}
+                >
+                    {isCollapsed ? '☰' : '✕'}
+                </button>
             </div>
             <nav className={styles.nav}>
                 {menuItems.map((item) => (
@@ -31,9 +38,10 @@ const Sidebar = () => {
                         key={item.path}
                         href={item.path}
                         className={`${styles.navItem} ${pathname === item.path ? styles.active : ''}`}
+                        title={isCollapsed ? item.name : ''}
                     >
                         <span className={styles.icon}>{item.icon}</span>
-                        <span className={styles.name}>{item.name}</span>
+                        {!isCollapsed && <span className={styles.name}>{item.name}</span>}
                     </Link>
                 ))}
             </nav>

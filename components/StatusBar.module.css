@@ -1,0 +1,146 @@
+.statusBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: var(--glass-bg);
+    /* Use theme variable */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--glass-border);
+    /* Use theme variable */
+    box-shadow: 0 -4px 10px var(--shadow-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.5rem;
+    z-index: 9999;
+    color: var(--text-main);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.separator {
+    color: var(--text-muted);
+    opacity: 0.5;
+    margin: 0 0.25rem;
+}
+
+.timeText {
+    font-variant-numeric: tabular-nums;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.employeeName {
+    color: var(--text-main);
+}
+
+.employeeId {
+    background: var(--primary);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-card);
+    /* Adapted for theme */
+    padding: 2px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+
+.userRoleBadge {
+    font-size: 0.65rem;
+    background: var(--secondary);
+    color: white;
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 700;
+}
+
+.userName {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.logoutBtn {
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 1px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.logoutBtn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(229, 62, 62, 0.1);
+}
+
+.noUser {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.printBriefBtn {
+    background: var(--primary);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 1rem;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+}
+
+.printBriefBtn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.clockIcon,
+.userIcon {
+    font-size: 1rem;
+    filter: grayscale(0.5);
+    color: var(--text-main);
+    /* Ensure icons are visible in dark mode */
+}
+
+.themeToggleWrapper {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+/* Global Hiding Utilities */
+:global(.no-print-screen) {
+    /* Always display none on screen if needed, 
+       but we want it hidden specifically for screen viewers */
+}
+
+@media screen {
+    :global(.no-print-screen) {
+        display: none !important;
+    }
+}

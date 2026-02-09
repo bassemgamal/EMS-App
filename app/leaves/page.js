@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useEmployee } from '@/context/EmployeeContext';
+import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/api';
 import EmployeeHeader from '@/components/EmployeeHeader';
 import Card from '@/components/Card';
 import FormField from '@/components/FormField';
@@ -8,12 +10,16 @@ import styles from './page.module.css';
 
 export default function LeavesPage() {
     const { activeEmployee } = useEmployee();
+    const { hasRole } = useAuth();
     const [records, setRecords] = useState([]);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [newData, setNewData] = useState({
         leave_type: '', start_date: '', end_date: '', duration_days: '', reason: '', status: 'Pending'
     });
+
+    const canEdit = hasRole(['ADMIN', 'MANAGER']);
+    const canDelete = hasRole(['ADMIN']);
 
     const calculateDuration = (start, end) => {
         if (!start || !end) return '';
@@ -49,7 +55,7 @@ export default function LeavesPage() {
         if (!activeEmployee) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/leaves`);
+            const res = await apiFetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/leaves`);
             const data = await res.json();
             setRecords(Array.isArray(data) ? data : []);
         } catch (error) { console.error('Fetch failed:', error); } finally { setLoading(false); }
@@ -67,6 +73,7 @@ export default function LeavesPage() {
 
     const handleAdd = async (e) => {
         e.preventDefault();
+        if (!canEdit) return;
 
         if (new Date(newData.end_date) < new Date(newData.start_date)) {
             alert('خطأ: تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء');
@@ -75,7 +82,7 @@ export default function LeavesPage() {
 
         setSaving(true);
         try {
-            await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/leaves`, {
+            await apiFetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/leaves`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newData)
@@ -86,9 +93,10 @@ export default function LeavesPage() {
     };
 
     const handleDelete = async (id) => {
+        if (!canDelete) return;
         if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
         try {
-            await fetch(`http://localhost:5001/api/details/leaves/${id}`, { method: 'DELETE' });
+            await apiFetch(`http://localhost:5001/api/details/leaves/${id}`, { method: 'DELETE' });
             fetchRecords();
         } catch (error) { console.error('Delete failed:', error); }
     };
@@ -101,14 +109,18 @@ export default function LeavesPage() {
             <div className={styles.layout}>
                 <Card title="طلب إجازة">
                     <form onSubmit={handleAdd} className={styles.grid}>
-                        <FormField label="نوع الإجازة" value={newData.leave_type} onChange={(e) => setNewData({ ...newData, leave_type: e.target.value })} required />
-                        <FormField label="تاريخ البدء" type="date" value={newData.start_date} onChange={(e) => handleDateChange('start_date', e.target.value)} required />
-                        <FormField label="تاريخ الانتهاء" type="date" value={newData.end_date} onChange={(e) => handleDateChange('end_date', e.target.value)} required />
+                        <FormField disabled={!canEdit} label="نوع الإجازة" value={newData.leave_type} onChange={(e) => setNewData({ ...newData, leave_type: e.target.value })} required />
+                        <FormField disabled={!canEdit} label="تاريخ البدء" type="date" value={newData.start_date} onChange={(e) => handleDateChange('start_date', e.target.value)} required />
+                        <FormField disabled={!canEdit} label="تاريخ الانتهاء" type="date" value={newData.end_date} onChange={(e) => handleDateChange('end_date', e.target.value)} required />
                         <FormField label="المدة (بالأيام)" type="number" value={newData.duration_days} readOnly />
                         <div className={styles.fullWidth}>
-                            <FormField label="السبب" type="textarea" value={newData.reason} onChange={(e) => setNewData({ ...newData, reason: e.target.value })} />
+                            <FormField disabled={!canEdit} label="السبب" type="textarea" value={newData.reason} onChange={(e) => setNewData({ ...newData, reason: e.target.value })} />
                         </div>
-                        <button type="submit" className={styles.saveBtn} disabled={saving}>{saving ? 'جاري الإرسال...' : 'إرسال الطلب'}</button>
+                        {canEdit ? (
+                            <button type="submit" className={styles.saveBtn} disabled={saving}>{saving ? 'جاري الإرسال...' : 'إرسال الطلب'}</button>
+                        ) : (
+                            <p className={styles.readonlyNote}>وضع العرض فقط</p>
+                        )}
                     </form>
                 </Card>
                 <Card title="سجل الإجازات">
@@ -122,7 +134,7 @@ export default function LeavesPage() {
                                     <th>المدة</th>
                                     <th>المتبقي</th>
                                     <th>الحالة</th>
-                                    <th>الإجراءات</th>
+                                    {canDelete && <th>الإجراءات</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -143,13 +155,15 @@ export default function LeavesPage() {
                                                     {statusInfo.text}
                                                 </span>
                                             </td>
-                                            <td>
-                                                <button onClick={() => handleDelete(reg.leave_id)} className={styles.delBtn}>حذف</button>
-                                            </td>
+                                            {canDelete && (
+                                                <td>
+                                                    <button onClick={() => handleDelete(reg.leave_id)} className={styles.delBtn}>حذف</button>
+                                                </td>
+                                            )}
                                         </tr>
                                     );
                                 }) : (
-                                    <tr><td colSpan="7" className={styles.noData}>لا يوجد سجلات إجازات</td></tr>
+                                    <tr><td colSpan={canDelete ? "7" : "6"} className={styles.noData}>لا يوجد سجلات إجازات</td></tr>
                                 )}
                             </tbody>
                         </table>

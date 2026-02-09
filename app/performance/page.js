@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useEmployee } from '@/context/EmployeeContext';
+import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/api';
 import EmployeeHeader from '@/components/EmployeeHeader';
 import Card from '@/components/Card';
 import FormField from '@/components/FormField';
@@ -8,6 +10,7 @@ import styles from './page.module.css';
 
 export default function PerformancePage() {
     const { activeEmployee } = useEmployee();
+    const { hasRole } = useAuth();
     const [records, setRecords] = useState([]);
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -16,6 +19,9 @@ export default function PerformancePage() {
         score: '',
         notes: ''
     });
+
+    const canEdit = hasRole(['ADMIN', 'MANAGER']);
+    const canDelete = hasRole(['ADMIN']);
 
     const getRating = (score) => {
         if (score === null || score === undefined || isNaN(score)) return "---";
@@ -34,7 +40,7 @@ export default function PerformancePage() {
         if (!activeEmployee) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/performance`);
+            const res = await apiFetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/performance`);
             const data = await res.json();
             setRecords(Array.isArray(data) ? data : []);
         } catch (error) {
@@ -50,9 +56,10 @@ export default function PerformancePage() {
 
     const handleAdd = async (e) => {
         e.preventDefault();
+        if (!canEdit) return;
         setSaving(true);
         try {
-            await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/performance`, {
+            await apiFetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/performance`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newData)
@@ -67,9 +74,10 @@ export default function PerformancePage() {
     };
 
     const handleDelete = async (id) => {
+        if (!canDelete) return;
         if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
         try {
-            await fetch(`http://localhost:5001/api/details/performance/${id}`, { method: 'DELETE' });
+            await apiFetch(`http://localhost:5001/api/details/performance/${id}`, { method: 'DELETE' });
             fetchRecords();
         } catch (error) {
             console.error('Delete failed:', error);
@@ -100,6 +108,7 @@ export default function PerformancePage() {
                     <Card title="إضافة تقييم جديد">
                         <form onSubmit={handleAdd}>
                             <FormField
+                                disabled={!canEdit}
                                 label="تاريخ التقييم"
                                 type="date"
                                 value={newData.evaluation_date}
@@ -107,6 +116,7 @@ export default function PerformancePage() {
                                 required
                             />
                             <FormField
+                                disabled={!canEdit}
                                 label="الدرجة (0-100)"
                                 type="number"
                                 value={newData.score}
@@ -116,14 +126,19 @@ export default function PerformancePage() {
                                 required
                             />
                             <FormField
+                                disabled={!canEdit}
                                 label="ملاحظات"
                                 type="textarea"
                                 value={newData.notes}
                                 onChange={(e) => setNewData({ ...newData, notes: e.target.value })}
                             />
-                            <button type="submit" className={styles.saveBtn} disabled={saving}>
-                                {saving ? 'جاري الإضافة...' : 'إضافة سجل'}
-                            </button>
+                            {canEdit ? (
+                                <button type="submit" className={styles.saveBtn} disabled={saving}>
+                                    {saving ? 'جاري الإضافة...' : 'إضافة سجل'}
+                                </button>
+                            ) : (
+                                <p className={styles.readonlyNote}>وضع العرض فقط</p>
+                            )}
                         </form>
                     </Card>
                 </div>
@@ -137,7 +152,7 @@ export default function PerformancePage() {
                                         <th>التاريخ</th>
                                         <th>الدرجة</th>
                                         <th>ملاحظات</th>
-                                        <th>الإجراءات</th>
+                                        {canDelete && <th>الإجراءات</th>}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -152,12 +167,14 @@ export default function PerformancePage() {
                                                 </div>
                                             </td>
                                             <td className={styles.notesTd}>{reg.notes}</td>
-                                            <td>
-                                                <button onClick={() => handleDelete(reg.performance_id)} className={styles.delBtn}>حذف</button>
-                                            </td>
+                                            {canDelete && (
+                                                <td>
+                                                    <button onClick={() => handleDelete(reg.performance_id)} className={styles.delBtn}>حذف</button>
+                                                </td>
+                                            )}
                                         </tr>
                                     )) : (
-                                        <tr><td colSpan="4" className={styles.noData}>لا يوجد سجلات أداء مضافة بعد</td></tr>
+                                        <tr><td colSpan={canDelete ? "4" : "3"} className={styles.noData}>لا يوجد سجلات أداء مضافة بعد</td></tr>
                                     )}
                                 </tbody>
                             </table>

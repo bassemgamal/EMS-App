@@ -5,18 +5,24 @@
     overflow: hidden;
     margin-bottom: 2rem;
     transition: var(--transition);
+    border: 1px solid var(--border-color);
+    /* Added border for better definition in dark mode */
 }
 
 .card:hover {
     box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+    /* subtle highlight on hover */
 }
 
 .header {
     padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: rgba(0, 0, 0, 0.02);
+    /* Slight tint for header */
 }
 
 .title {
@@ -27,4 +33,5 @@
 
 .content {
     padding: 1.5rem;
+    color: var(--text-main);
 }

@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useEmployee } from '@/context/EmployeeContext';
+import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/api';
 import EmployeeHeader from '@/components/EmployeeHeader';
 import Card from '@/components/Card';
 import FormField from '@/components/FormField';
@@ -16,6 +18,7 @@ const GRADE_OPTIONS = [{ label: '--- اختر الدرجة ---', value: '' }, ..
 
 export default function GradesPage() {
     const { activeEmployee } = useEmployee();
+    const { hasRole } = useAuth();
     const [gradeData, setGradeData] = useState({
         appointed_grade: '', appointed_grade_date: '',
         third_grade_date: '', settlement_date: '',
@@ -24,6 +27,8 @@ export default function GradesPage() {
     });
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
+
+    const canEdit = hasRole(['ADMIN', 'MANAGER']);
 
     const formatDateForInput = (dateStr) => {
         if (!dateStr) return '';
@@ -35,7 +40,7 @@ export default function GradesPage() {
         if (!activeEmployee) return;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/grades`);
+            const res = await apiFetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/grades`);
             if (res.ok) {
                 const data = await res.json();
                 if (data) {
@@ -58,9 +63,10 @@ export default function GradesPage() {
 
     const handleSave = async (e) => {
         e.preventDefault();
+        if (!canEdit) return;
         setSaving(true);
         try {
-            const res = await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/grades`, {
+            const res = await apiFetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/grades`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(gradeData)
@@ -91,22 +97,25 @@ export default function GradesPage() {
             <div className={styles.layout}>
                 <Card title="بيانات الدرجات الوظيفية">
                     <form onSubmit={handleSave} className={styles.grid}>
-                        <FormField label="الدرجة المعين عليها" type="select" options={GRADE_OPTIONS} value={gradeData.appointed_grade} onChange={(e) => setGradeData({ ...gradeData, appointed_grade: e.target.value })} />
-                        <FormField label="تاريخ أقدمية التعيين" type="date" value={gradeData.appointed_grade_date} onChange={(e) => setGradeData({ ...gradeData, appointed_grade_date: e.target.value })} />
+                        <FormField disabled={!canEdit} label="الدرجة المعين عليها" type="select" options={GRADE_OPTIONS} value={gradeData.appointed_grade} onChange={(e) => setGradeData({ ...gradeData, appointed_grade: e.target.value })} />
+                        <FormField disabled={!canEdit} label="تاريخ أقدمية التعيين" type="date" value={gradeData.appointed_grade_date} onChange={(e) => setGradeData({ ...gradeData, appointed_grade_date: e.target.value })} />
 
-                        <FormField label="تاريخ الدرجة الثالثة" type="date" value={gradeData.third_grade_date} onChange={(e) => setGradeData({ ...gradeData, third_grade_date: e.target.value })} />
-                        <FormField label="تاريخ التسوية" type="date" value={gradeData.settlement_date} onChange={(e) => setGradeData({ ...gradeData, settlement_date: e.target.value })} />
+                        <FormField disabled={!canEdit} label="تاريخ الدرجة الثالثة" type="date" value={gradeData.third_grade_date} onChange={(e) => setGradeData({ ...gradeData, third_grade_date: e.target.value })} />
+                        <FormField disabled={!canEdit} label="تاريخ التسوية" type="date" value={gradeData.settlement_date} onChange={(e) => setGradeData({ ...gradeData, settlement_date: e.target.value })} />
 
-                        <FormField label="الدرجة قبل السابقة" type="select" options={GRADE_OPTIONS} value={gradeData.previous_previous_grade} onChange={(e) => setGradeData({ ...gradeData, previous_previous_grade: e.target.value })} />
-                        <FormField label="الدرجة السابقة" type="select" options={GRADE_OPTIONS} value={gradeData.previous_grade} onChange={(e) => setGradeData({ ...gradeData, previous_grade: e.target.value })} />
+                        <FormField disabled={!canEdit} label="الدرجة قبل السابقة" type="select" options={GRADE_OPTIONS} value={gradeData.previous_previous_grade} onChange={(e) => setGradeData({ ...gradeData, previous_previous_grade: e.target.value })} />
+                        <FormField disabled={!canEdit} label="الدرجة السابقة" type="select" options={GRADE_OPTIONS} value={gradeData.previous_grade} onChange={(e) => setGradeData({ ...gradeData, previous_grade: e.target.value })} />
 
-                        <FormField label="الدرجة الحالية" type="select" options={GRADE_OPTIONS} value={gradeData.current_grade} onChange={(e) => setGradeData({ ...gradeData, current_grade: e.target.value })} />
-                        <FormField label="تاريخ الترقية" type="date" value={gradeData.initial_promotion_date} onChange={(e) => setGradeData({ ...gradeData, initial_promotion_date: e.target.value })} />
+                        <FormField disabled={!canEdit} label="الدرجة الحالية" type="select" options={GRADE_OPTIONS} value={gradeData.current_grade} onChange={(e) => setGradeData({ ...gradeData, current_grade: e.target.value })} />
+                        <FormField disabled={!canEdit} label="تاريخ الترقية" type="date" value={gradeData.initial_promotion_date} onChange={(e) => setGradeData({ ...gradeData, initial_promotion_date: e.target.value })} />
 
                         <div className={styles.formActions}>
-                            <button type="submit" className={styles.saveBtn} disabled={saving}>
-                                {saving ? 'جاري الحفظ...' : 'حفظ البيانات'}
-                            </button>
+                            {canEdit && (
+                                <button type="submit" className={styles.saveBtn} disabled={saving}>
+                                    {saving ? 'جاري الحفظ...' : 'حفظ البيانات'}
+                                </button>
+                            )}
+                            {!canEdit && <p className={styles.readonlyNote}>وضع العرض فقط: لا تملك صلاحية تعديل هذه البيانات.</p>}
                         </div>
                     </form>
                 </Card>

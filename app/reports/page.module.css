@@ -1,0 +1,270 @@
+.container {
+    padding-bottom: 40px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: var(--text-muted);
+}
+
+.headerActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.optionsBtn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.optionsBtn:hover {
+    background: var(--bg-main);
+}
+
+.optionsPanel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+}
+
+.optionsPanel h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+}
+
+.divider {
+    color: var(--border-color);
+    font-weight: 200;
+}
+
+.printBtn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.printBtn:hover {
+    background: var(--bg-main);
+    transform: translateY(-2px);
+}
+
+.chartSection {
+    background: var(--bg-card);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+}
+
+.chartSection h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.barContainer {
+    height: 10px;
+    background: var(--bg-main);
+    border-radius: 100px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.qualCard {
+    background: var(--bg-card);
+    padding: 1.2rem;
+    border-radius: var(--radius-md);
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+}
+
+/* Print-only Elements (Hidden on screen) */
+.printHeader,
+.printFooter {
+    display: none;
+}
+
+@media print {
+    @page {
+        margin: 1cm;
+        counter-increment: page;
+    }
+
+    .pageNumber::after {
+        content: "صفحة " counter(page);
+        position: fixed;
+        bottom: 0.5cm;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.8rem;
+        color: #718096;
+    }
+
+    .watermark {
+        display: block !important;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 5rem;
+        color: rgba(0, 0, 0, 0.05);
+        font-weight: 900;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* Previous print styles ... */
+
+    .printBtn,
+    :global(.statusBar) {
+        display: none !important;
+    }
+
+    :global(main) {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+    }
+
+    .container {
+        padding: 1cm;
+        background: white;
+    }
+
+    .header {
+        display: none;
+        /* Hide digital header, use printHeader instead */
+    }
+
+    /* Formal Print Header */
+    .printHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #1a202c;
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .printHeaderRight {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .printLogo {
+        font-size: 3rem;
+    }
+
+    .printHeaderRight h2 {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #1a202c;
+    }
+
+    .printHeaderRight p {
+        font-size: 0.9rem;
+        color: #4a5568;
+    }
+
+    .printHeaderLeft {
+        text-align: left;
+        font-size: 0.85rem;
+        color: #4a5568;
+        line-height: 1.5;
+    }
+
+    /* Grid Adjustments for print */
+    .statsGrid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1rem;
+        margin-bottom: 3rem;
+    }
+
+    .chartSection {
+        box-shadow: none !important;
+        border: 1px solid #e2e8f0;
+        break-inside: avoid;
+    }
+
+    .statValue {
+        color: #1a202c !important;
+    }
+
+    .barContainer {
+        border: 1px solid #e2e8f0;
+        background: white !important;
+    }
+
+    .bar {
+        background: #1a202c !important;
+        /* Professional dark bars for print */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Formal Print Footer */
+    .printFooter {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5rem;
+        border-top: 1px dashed #cbd5e0;
+        padding-top: 2rem;
+    }
+
+    .signatureBox {
+        text-align: center;
+        width: 300px;
+    }
+
+    .signatureLine {
+        margin-top: 1.5rem;
+        font-weight: bold;
+    }
+
+    .sealCircle {
+        width: 80px;
+        height: 80px;
+        border: 2px solid #e2e8f0;
+        border-radius: 50%;
+        margin: 1rem auto;
+    }
+}

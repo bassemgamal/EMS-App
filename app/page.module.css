@@ -44,11 +44,13 @@
 .searchInput {
   flex: 1;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--input-border);
   border-radius: var(--radius-md);
   font-size: 1rem;
   outline: none;
   transition: var(--transition);
+  background: var(--input-bg);
+  color: var(--text-main);
 }
 
 .searchInput:focus {
@@ -58,10 +60,13 @@
 
 .searchButton {
   background: var(--text-main);
-  color: white;
+  /* Might want to check this for dark mode contrast, maybe use primary or card bg with border */
+  color: var(--bg-card);
+  /* Inverted text color */
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   font-weight: 600;
+  border: 1px solid var(--text-main);
 }
 
 .loading,
@@ -74,23 +79,22 @@
 .table {
   width: 100%;
   border-collapse: separate;
-  /* Required for sticky border-spacing */
   border-spacing: 0;
   text-align: right;
+  color: var(--text-main);
 }
 
 .table th {
   padding: 1rem;
   font-weight: 600;
   color: var(--text-muted);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .table td {
   padding: 1rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--border-color);
   white-space: nowrap;
-  /* Prevent content from wrapping and causing height issues */
 }
 
 .status {
@@ -160,17 +164,15 @@
   position: sticky;
   left: 0;
   background: var(--bg-card);
-  /* Match card background */
   z-index: 10;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.05);
-  /* Shadow on the right side of the left-stuck column */
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  /* Explicit border for separation */
+  box-shadow: -2px 0 5px var(--shadow-color);
+  border-right: 1px solid var(--border-color);
 }
 
 .table th:last-child {
   z-index: 11;
   background: var(--bg-main);
+  /* Header usually has same bg as body or slightly diff, assuming body bg here */
 }
 
 .tableScroll {
@@ -185,6 +187,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
+  /* Keep dark overlay */
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -194,14 +197,16 @@
 }
 
 .modal {
-  background: white;
+  background: var(--bg-card);
   width: 90%;
   max-width: 600px;
   border-radius: var(--radius-lg);
   padding: 2rem;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-lg);
   max-height: 90vh;
   overflow-y: auto;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
 }
 
 .modal h2 {
@@ -231,9 +236,11 @@
 .formGroup input,
 .formGroup select {
   padding: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--input-border);
   border-radius: var(--radius-md);
   outline: none;
+  background: var(--input-bg);
+  color: var(--text-main);
 }
 
 .formGroup input:focus {
@@ -255,11 +262,12 @@
 }
 
 .cancelBtn {
-  background: #f3f4f6;
+  background: var(--bg-main);
   color: var(--text-main);
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-md);
   font-weight: 600;
+  border: 1px solid var(--border-color);
 }
 
 @keyframes fadeIn {

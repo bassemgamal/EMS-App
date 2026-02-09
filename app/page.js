@@ -2,15 +2,22 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useEmployee } from '@/context/EmployeeContext';
+import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/api';
 import Card from '@/components/Card';
 import styles from './page.module.css';
 
 export default function Home() {
   const router = useRouter();
   const { setActiveEmployee } = useEmployee();
+  const { user, hasRole } = useAuth();
   const [employees, setEmployees] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Role Checks
+  const canAdd = hasRole(['ADMIN', 'MANAGER']);
+  const canDelete = hasRole(['ADMIN']); // Admins only for deletion for safety
 
   const statusMap = {
     'عامل': 'عامل',
@@ -54,7 +61,7 @@ export default function Home() {
       const url = query
         ? `http://localhost:5001/api/employees/search?q=${query}`
         : `http://localhost:5001/api/employees`;
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       const data = await res.json();
       setEmployees(Array.isArray(data) ? data : []);
     } catch (error) {
@@ -80,9 +87,10 @@ export default function Home() {
   };
 
   const handleDelete = async (id) => {
+    if (!canDelete) return;
     if (confirm('هل أنت متأكد من حذف هذا الموظف؟')) {
       try {
-        const res = await fetch(`http://localhost:5001/api/employees/${id}`, {
+        const res = await apiFetch(`http://localhost:5001/api/employees/${id}`, {
           method: 'DELETE'
         });
         if (res.ok) {
@@ -99,7 +107,7 @@ export default function Home() {
   const handleAddEmployee = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:5001/api/employees', {
+      const res = await apiFetch('http://localhost:5001/api/employees', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEmployee)
@@ -135,12 +143,14 @@ export default function Home() {
           <h1>الموظفين</h1>
           <p>إدارة والبحث عن الموظفين في النظام</p>
         </div>
-        <button
-          className={styles.addButton}
-          onClick={() => setShowAddModal(true)}
-        >
-          + إضافة موظف جديد
-        </button>
+        {canAdd && (
+          <button
+            className={styles.addButton}
+            onClick={() => setShowAddModal(true)}
+          >
+            + إضافة موظف جديد
+          </button>
+        )}
       </header>
 
       <Card>
@@ -203,12 +213,14 @@ export default function Home() {
                       >
                         عرض التفاصيل
                       </button>
-                      <button
-                        className={styles.deleteBtn}
-                        onClick={() => handleDelete(emp.employee_id)}
-                      >
-                        حذف
-                      </button>
+                      {canDelete && (
+                        <button
+                          className={styles.deleteBtn}
+                          onClick={() => handleDelete(emp.employee_id)}
+                        >
+                          حذف
+                        </button>
+                      )}
                     </td>
                   </tr>
                 )) : (
