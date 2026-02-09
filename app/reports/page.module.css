@@ -1,5 +1,8 @@
 .container {
-    padding-bottom: 40px;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-out;
 }
 
 .header {
@@ -7,16 +10,20 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .header h1 {
     font-size: 1.8rem;
+    font-weight: 700;
     color: var(--text-main);
     margin-bottom: 0.5rem;
 }
 
 .header p {
     color: var(--text-muted);
+    font-size: 1rem;
 }
 
 .headerActions {
@@ -24,18 +31,44 @@
     gap: 1rem;
 }
 
+.optionsBtn,
+.printBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
 .optionsBtn {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     color: var(--text-main);
-    padding: 0.6rem 1rem;
-    border-radius: var(--radius-md);
-    font-weight: 600;
-    transition: var(--transition);
 }
 
 .optionsBtn:hover {
     background: var(--bg-main);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.printBtn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    box-shadow: var(--shadow-md);
+}
+
+.printBtn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
 }
 
 .optionsPanel {
@@ -44,227 +77,260 @@
     padding: 1.5rem;
     border-radius: var(--radius-lg);
     margin-bottom: 2rem;
+    box-shadow: var(--shadow-sm);
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .optionsPanel h3 {
     font-size: 1rem;
-    margin-bottom: 1rem;
-    color: var(--text-main);
-}
-
-.divider {
-    color: var(--border-color);
-    font-weight: 200;
-}
-
-.printBtn {
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.6rem 1.2rem;
-    border-radius: var(--radius-md);
     font-weight: 600;
+    margin-bottom: 1.25rem;
+    color: var(--text-main);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: var(--transition);
 }
 
-.printBtn:hover {
-    background: var(--bg-main);
-    transform: translateY(-2px);
+.optionsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
 }
 
-.chartSection {
-    background: var(--bg-card);
-    padding: 1.5rem;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-}
-
-.chartSection h3 {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-color);
+.optionLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
     color: var(--text-main);
+    cursor: pointer;
+    user-select: none;
+}
+
+.optionLabel input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.statValue {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+}
+
+.statLabel {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.chartsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.visualList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.visualItem {
+    display: grid;
+    grid-template-columns: 120px 1fr 50px;
+    align-items: center;
+    gap: 1rem;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: var(--text-main);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .barContainer {
-    height: 10px;
+    height: 12px;
     background: var(--bg-main);
     border-radius: 100px;
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 100px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.count {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-align: left;
+}
+
+.detailedSection {
+    margin-top: 2rem;
+}
+
+.qualGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
 }
 
 .qualCard {
-    background: var(--bg-card);
-    padding: 1.2rem;
+    background: var(--bg-main);
+    padding: 1rem;
     border-radius: var(--radius-md);
     text-align: center;
     border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.qualCard:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+}
+
+.qualName {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.qualCount {
+    font-size: 1.5rem;
+    color: var(--primary);
+    font-weight: 700;
 }
 
 .loading {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 300px;
-    font-size: 1.2rem;
+    height: 60vh;
+    font-size: 1.5rem;
     color: var(--text-muted);
 }
 
-/* Print-only Elements (Hidden on screen) */
+/* ================= PRINT STYLES ================= */
 .printHeader,
-.printFooter {
+.printFooter,
+.watermark {
     display: none;
 }
 
 @media print {
     @page {
-        margin: 1cm;
-        counter-increment: page;
+        size: auto;
+        margin: 0.5cm;
     }
 
-    .pageNumber::after {
-        content: "صفحة " counter(page);
-        position: fixed;
-        bottom: 0.5cm;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8rem;
-        color: #718096;
-    }
-
-    .watermark {
-        display: block !important;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-45deg);
-        font-size: 5rem;
-        color: rgba(0, 0, 0, 0.05);
-        font-weight: 900;
-        white-space: nowrap;
-        pointer-events: none;
-        z-index: -1;
-    }
-
-    /* Previous print styles ... */
-
-    .printBtn,
-    :global(.statusBar) {
-        display: none !important;
-    }
-
-    :global(main) {
-        margin: 0 !important;
-        padding: 0 !important;
+    body {
         background: white !important;
-    }
-
-    .container {
-        padding: 1cm;
-        background: white;
-    }
-
-    .header {
-        display: none;
-        /* Hide digital header, use printHeader instead */
-    }
-
-    /* Formal Print Header */
-    .printHeader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid #1a202c;
-        padding-bottom: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .printHeaderRight {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-    }
-
-    .printLogo {
-        font-size: 3rem;
-    }
-
-    .printHeaderRight h2 {
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: #1a202c;
-    }
-
-    .printHeaderRight p {
-        font-size: 0.9rem;
-        color: #4a5568;
-    }
-
-    .printHeaderLeft {
-        text-align: left;
-        font-size: 0.85rem;
-        color: #4a5568;
-        line-height: 1.5;
-    }
-
-    /* Grid Adjustments for print */
-    .statsGrid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 1rem;
-        margin-bottom: 3rem;
-    }
-
-    .chartSection {
-        box-shadow: none !important;
-        border: 1px solid #e2e8f0;
-        break-inside: avoid;
-    }
-
-    .statValue {
-        color: #1a202c !important;
-    }
-
-    .barContainer {
-        border: 1px solid #e2e8f0;
-        background: white !important;
-    }
-
-    .bar {
-        background: #1a202c !important;
-        /* Professional dark bars for print */
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
 
-    /* Formal Print Footer */
+    .container {
+        padding: 0 !important;
+        max-width: none !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .header,
+    .optionsPanel,
+    .printBtn,
+    .headerActions,
+    :global(aside),
+    :global(.statusBar) {
+        display: none !important;
+    }
+
+    .watermark {
+        display: block;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: 6rem;
+        color: rgba(0, 0, 0, 0.03);
+        font-weight: 900;
+        z-index: -1;
+    }
+
+    .printHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #000;
+    }
+
+    .optionsPanel {
+        display: none;
+    }
+
+    .statsGrid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    .chartSection,
+    .qualCard {
+        border: 1px solid #ccc;
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    .bar {
+        background: #000 !important;
+    }
+
     .printFooter {
         display: flex;
         justify-content: space-between;
-        margin-top: 5rem;
-        border-top: 1px dashed #cbd5e0;
+        margin-top: 4rem;
         padding-top: 2rem;
+        border-top: 1px dashed #ccc;
+        break-inside: avoid;
     }
 
     .signatureBox {
         text-align: center;
-        width: 300px;
-    }
-
-    .signatureLine {
-        margin-top: 1.5rem;
-        font-weight: bold;
-    }
-
-    .sealCircle {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #e2e8f0;
-        border-radius: 50%;
-        margin: 1rem auto;
+        width: 200px;
     }
 }

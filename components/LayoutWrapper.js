@@ -53,12 +53,12 @@ export default function LayoutWrapper({ children }) {
         <div style={{ display: 'flex' }} className={masterData ? 'is-printing-master' : ''}>
             <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
             <main id="main-content" style={{
-                marginRight: isCollapsed ? '80px' : '260px',
+                marginRight: isCollapsed ? '5rem' : '16.25rem',
                 flex: 1,
                 minHeight: '100vh',
                 background: 'var(--bg-main)',
                 padding: '2rem',
-                paddingBottom: '60px',
+                paddingBottom: '3.75rem',
                 transition: 'margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}>
                 <div className="animate-fade-in">

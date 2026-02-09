@@ -3,7 +3,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: 40px;
+    height: 2.5rem;
     background: var(--glass-bg);
     /* Use theme variable */
     backdrop-filter: blur(12px);
@@ -134,13 +134,29 @@
 }
 
 /* Global Hiding Utilities */
+
+
 :global(.no-print-screen) {
-    /* Always display none on screen if needed, 
-       but we want it hidden specifically for screen viewers */
+    display: none !important;
 }
 
-@media screen {
-    :global(.no-print-screen) {
-        display: none !important;
-    }
+
+.clearBtn {
+    background: transparent;
+    border: none;
+    color: var(--danger);
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+    padding: 4px;
+    border-radius: 50%;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clearBtn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
 }

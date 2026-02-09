@@ -1,5 +1,5 @@
 .sidebar {
-    width: 260px;
+    width: 16.25rem;
     height: 100vh;
     background: var(--bg-card);
     /* Uses theme variable */
@@ -16,7 +16,7 @@
 }
 
 .collapsed {
-    width: 80px;
+    width: 5rem;
 }
 
 .logo {
@@ -25,7 +25,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 80px;
+    min-height: 5rem;
 }
 
 .logo h1 {
@@ -39,8 +39,8 @@
     background: var(--bg-main);
     /* Uses theme variable */
     color: var(--primary);
-    width: 32px;
-    height: 32px;
+    width: 2rem;
+    height: 2rem;
     border-radius: 8px;
     display: flex;
     align-items: center;

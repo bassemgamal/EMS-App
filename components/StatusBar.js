@@ -6,7 +6,7 @@ import ThemeToggle from './ThemeToggle';
 import styles from './StatusBar.module.css';
 
 export default function StatusBar({ onPrintMaster }) {
-    const { activeEmployee } = useEmployee();
+    const { activeEmployee, setActiveEmployee } = useEmployee();
     const { user, logout } = useAuth();
     const [time, setTime] = useState(new Date());
 
@@ -54,6 +54,13 @@ export default function StatusBar({ onPrintMaster }) {
                         <span className={styles.userIcon}>👤</span>
                         <span className={styles.employeeName}>{activeEmployee.full_name}</span>
                         <span className={styles.employeeId}>#{activeEmployee.employee_id}</span>
+                        <button
+                            className={styles.clearBtn}
+                            onClick={() => setActiveEmployee(null)}
+                            title="إلغاء الموظف النشط"
+                        >
+                            ❌
+                        </button>
                     </>
                 ) : (
                     <span className={styles.noUser}>لا يوجد موظف نشط</span>

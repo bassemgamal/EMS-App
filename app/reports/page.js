@@ -23,8 +23,12 @@ export default function ReportsPage() {
     const fetchSummary = async () => {
         try {
             const res = await apiFetch('http://localhost:5001/api/reports/summary');
-            const data = await res.json();
-            setSummary(data);
+            if (res.ok) {
+                const data = await res.json();
+                setSummary(data);
+            } else {
+                console.error('Failed to fetch reports. Status:', res.status);
+            }
         } catch (error) {
             console.error('Failed to fetch reports:', error);
         } finally {
@@ -37,6 +41,13 @@ export default function ReportsPage() {
     }, []);
 
     if (loading) return <div className={styles.loading}>جاري تحميل التقارير...</div>;
+
+    // Safety check: if summary or stats are missing, show error or empty state
+    if (!summary || !summary.stats) {
+        return <div className={styles.container}><p style={{ textAlign: 'center', marginTop: '2rem' }}>لا توجد بيانات متاحة لعرض التقارير حالياً.</p></div>;
+    }
+
+    const totalEmployees = Number(summary.stats.totalEmployees) || 0;
 
     return (
         <div className={`${styles.container} ${landscapeMode ? styles.landscape : ''}`}>
@@ -103,15 +114,15 @@ export default function ReportsPage() {
             {visibleSections.stats && (
                 <div className={styles.statsGrid}>
                     <Card title="إجمالي الموظفين" icon="👥">
-                        <div className={styles.statValue}>{summary?.stats.totalEmployees}</div>
+                        <div className={styles.statValue}>{summary.stats.totalEmployees}</div>
                         <div className={styles.statLabel}>موظف مسجل</div>
                     </Card>
                     <Card title="إجازات سارية اليوم" icon="📅">
-                        <div className={styles.statValue}>{summary?.stats.activeLeaves}</div>
+                        <div className={styles.statValue}>{summary.stats.activeLeaves}</div>
                         <div className={styles.statLabel}>أفراد في إجازة</div>
                     </Card>
                     <Card title="المتميزون (90%+)" icon="⭐">
-                        <div className={styles.statValue}>{summary?.stats.highPerformers}</div>
+                        <div className={styles.statValue}>{summary.stats.highPerformers}</div>
                         <div className={styles.statLabel}>تقييم ممتاز هذا العام</div>
                     </Card>
                 </div>
@@ -119,46 +130,44 @@ export default function ReportsPage() {
 
             <div className={styles.chartsGrid}>
                 {visibleSections.gender && (
-                    <section className={styles.chartSection}>
-                        <h3>Distribution by Gender | توزيع النوع</h3>
+                    <Card title="توزيع النوع">
                         <div className={styles.visualList}>
-                            {summary?.distributions.gender.map(item => (
+                            {summary.distributions.gender && summary.distributions.gender.length > 0 ? summary.distributions.gender.map(item => (
                                 <div key={item.gender} className={styles.visualItem}>
                                     <div className={styles.label}>{item.gender || 'غير محدد'}</div>
                                     <div className={styles.barContainer}>
                                         <div
                                             className={styles.bar}
-                                            style={{ width: `${(item.count / summary.stats.totalEmployees) * 100}%` }}
+                                            style={{ width: `${totalEmployees > 0 ? (item.count / totalEmployees) * 100 : 0}%` }}
                                         ></div>
                                     </div>
                                     <div className={styles.count}>{item.count}</div>
                                 </div>
-                            ))}
+                            )) : <p>لا توجد بيانات</p>}
                         </div>
-                    </section>
+                    </Card>
                 )}
 
                 {visibleSections.groups && (
-                    <section className={styles.chartSection}>
-                        <h3>Functional Groups | المجموعات الوظيفية</h3>
+                    <Card title="توزيع المجموعات الوظيفية">
                         <div className={styles.visualList}>
-                            {summary?.distributions.groups.map(item => (
+                            {summary.distributions.groups && summary.distributions.groups.length > 0 ? summary.distributions.groups.map(item => (
                                 <div key={item.functional_group} className={styles.visualItem}>
                                     <div className={styles.label}>{item.functional_group || 'أخرى'}</div>
                                     <div className={styles.barContainer}>
                                         <div
                                             className={styles.bar}
                                             style={{
-                                                width: `${(item.count / summary.stats.totalEmployees) * 100}%`,
+                                                width: `${totalEmployees > 0 ? (item.count / totalEmployees) * 100 : 0}%`,
                                                 backgroundColor: '#38bdf8'
                                             }}
                                         ></div>
                                     </div>
                                     <div className={styles.count}>{item.count}</div>
                                 </div>
-                            ))}
+                            )) : <p>لا توجد بيانات</p>}
                         </div>
-                    </section>
+                    </Card>
                 )}
             </div>
 
@@ -166,12 +175,12 @@ export default function ReportsPage() {
                 <section className={styles.detailedSection}>
                     <Card title="توزيع المؤهلات العلمية">
                         <div className={styles.qualGrid}>
-                            {summary?.distributions.qualifications.map(item => (
+                            {summary.distributions.qualifications && summary.distributions.qualifications.length > 0 ? summary.distributions.qualifications.map(item => (
                                 <div key={item.qualification_level} className={styles.qualCard}>
                                     <div className={styles.qualName}>{item.qualification_level || 'غير محدد'}</div>
                                     <div className={styles.qualCount}>{item.count}</div>
                                 </div>
-                            ))}
+                            )) : <p style={{ textAlign: 'center', width: '100%' }}>لا توجد بيانات</p>}
                         </div>
                     </Card>
                 </section>
