@@ -1,11 +1,11 @@
 import styles from './FormField.module.css';
 
-const FormField = ({ label, type = "text", value, onChange, placeholder, options }) => {
+const FormField = ({ label, type = "text", value, onChange, placeholder, options, ...rest }) => {
     return (
         <div className={styles.field}>
             <label className={styles.label}>{label}</label>
             {type === "select" ? (
-                <select className={styles.input} value={value} onChange={onChange}>
+                <select className={styles.input} value={value} onChange={onChange} {...rest}>
                     <option value="">اختر {label}...</option>
                     {options.map((opt, idx) => {
                         const isObj = typeof opt === 'object' && opt !== null;
@@ -20,6 +20,7 @@ const FormField = ({ label, type = "text", value, onChange, placeholder, options
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
+                    {...rest}
                 />
             ) : (
                 <input
@@ -28,6 +29,7 @@ const FormField = ({ label, type = "text", value, onChange, placeholder, options
                     value={value || ''}
                     onChange={onChange}
                     placeholder={placeholder}
+                    {...rest}
                 />
             )}
         </div>

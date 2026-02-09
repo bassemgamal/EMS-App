@@ -17,13 +17,26 @@ export default function PerformancePage() {
         notes: ''
     });
 
+    const getRating = (score) => {
+        if (score === null || score === undefined || isNaN(score)) return "---";
+        if (score >= 90) return "ممتاز";
+        if (score >= 80) return "جيد جداً";
+        if (score >= 70) return "جيد";
+        if (score >= 50) return "مقبول";
+        return "ضعيف";
+    };
+
+    const averageScore = records.length > 0
+        ? (records.reduce((acc, curr) => acc + Number(curr.score), 0) / records.length).toFixed(1)
+        : null;
+
     const fetchRecords = async () => {
         if (!activeEmployee) return;
         setLoading(true);
         try {
             const res = await fetch(`http://localhost:5001/api/details/${activeEmployee.employee_id}/performance`);
             const data = await res.json();
-            setRecords(data);
+            setRecords(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Fetch failed:', error);
         } finally {
@@ -63,7 +76,7 @@ export default function PerformancePage() {
         }
     };
 
-    if (!activeEmployee) return <p>برجاء اختيار موظف أولاً.</p>;
+    if (!activeEmployee) return <div className={styles.container}><p>برجاء اختيار موظف أولاً.</p></div>;
 
     return (
         <div className={styles.container}>
@@ -71,6 +84,19 @@ export default function PerformancePage() {
 
             <div className={styles.layout}>
                 <div className={styles.formCol}>
+                    <Card title="إحصائيات الأداء">
+                        <div className={styles.statsBox}>
+                            <div className={styles.statItem}>
+                                <span className={styles.statLabel}>متوسط التقييم:</span>
+                                <span className={styles.statValue}>{averageScore || '---'}</span>
+                            </div>
+                            <div className={styles.statItem}>
+                                <span className={styles.statLabel}>التقدير العام:</span>
+                                <span className={styles.ratingValue}>{getRating(Number(averageScore))}</span>
+                            </div>
+                        </div>
+                    </Card>
+
                     <Card title="إضافة تقييم جديد">
                         <form onSubmit={handleAdd}>
                             <FormField
@@ -78,12 +104,16 @@ export default function PerformancePage() {
                                 type="date"
                                 value={newData.evaluation_date}
                                 onChange={(e) => setNewData({ ...newData, evaluation_date: e.target.value })}
+                                required
                             />
                             <FormField
                                 label="الدرجة (0-100)"
                                 type="number"
                                 value={newData.score}
                                 onChange={(e) => setNewData({ ...newData, score: e.target.value })}
+                                min="0"
+                                max="100"
+                                required
                             />
                             <FormField
                                 label="ملاحظات"
@@ -113,10 +143,10 @@ export default function PerformancePage() {
                                 <tbody>
                                     {records.length > 0 ? records.map(reg => (
                                         <tr key={reg.performance_id}>
-                                            <td>{new Date(reg.evaluation_date).toLocaleDateString()}</td>
+                                            <td>{new Date(reg.evaluation_date).toLocaleDateString('ar-EG')}</td>
                                             <td>
                                                 <div className={styles.scoreBadge} style={{
-                                                    '--score-color': reg.score > 80 ? 'var(--success)' : reg.score > 50 ? 'var(--primary)' : 'var(--danger)'
+                                                    '--score-color': reg.score >= 90 ? '#10b981' : reg.score >= 80 ? '#3b82f6' : reg.score >= 70 ? '#f59e0b' : '#ef4444'
                                                 }}>
                                                     {reg.score}
                                                 </div>
@@ -127,7 +157,7 @@ export default function PerformancePage() {
                                             </td>
                                         </tr>
                                     )) : (
-                                        <tr><td colSpan="4">لا يوجد سجلات</td></tr>
+                                        <tr><td colSpan="4" className={styles.noData}>لا يوجد سجلات أداء مضافة بعد</td></tr>
                                     )}
                                 </tbody>
                             </table>

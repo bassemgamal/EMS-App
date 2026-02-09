@@ -84,8 +84,12 @@ export default function ActionsPage() {
                     <FormField label="المدة (بالأيام)" type="number" value={newData.duration_days} onChange={(e) => setNewData({ ...newData, duration_days: e.target.value })} />
                     <FormField label="رقم الإجراء" value={newData.action_number} onChange={(e) => setNewData({ ...newData, action_number: e.target.value })} />
                     <FormField label="جهة الصدور" value={newData.authority} onChange={(e) => setNewData({ ...newData, authority: e.target.value })} />
+                    <FormField label="الحالة" value={newData.status} onChange={(e) => setNewData({ ...newData, status: e.target.value })} />
                     <div className={styles.fullWidth}>
                         <FormField label="الوصف" type="textarea" value={newData.description} onChange={(e) => setNewData({ ...newData, description: e.target.value })} />
+                    </div>
+                    <div className={styles.fullWidth}>
+                        <FormField label="الملاحظات" type="textarea" value={newData.notes} onChange={(e) => setNewData({ ...newData, notes: e.target.value })} />
                     </div>
                     <button type="submit" className={styles.saveBtn} disabled={saving}>{saving ? 'جاري الإضافة...' : 'إضافة إجراء'}</button>
                 </form>
@@ -93,30 +97,42 @@ export default function ActionsPage() {
 
             <Card title="سجل الإجراءات">
                 {loading ? <p>جاري التحميل...</p> : (
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                <th>النوع</th>
-                                <th>تاريخ القرار</th>
-                                <th>جهة الصدور</th>
-                                <th>الحالة</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {records.map(reg => (
-                                <tr key={reg.action_id}>
-                                    <td>{reg.action_type}</td>
-                                    <td>{new Date(reg.decision_date).toLocaleDateString()}</td>
-                                    <td>{reg.authority}</td>
-                                    <td>{reg.status}</td>
-                                    <td>
-                                        <button onClick={() => handleDelete(reg.action_id)} className={styles.delBtn}>حذف</button>
-                                    </td>
+                    <div className={styles.tableResponsive}>
+                        <table className={styles.table}>
+                            <thead>
+                                <tr>
+                                    <th>النوع</th>
+                                    <th>رقم الإجراء</th>
+                                    <th>تاريخ الإحالة</th>
+                                    <th>تاريخ القرار</th>
+                                    <th>المدة</th>
+                                    <th>جهة الصدور</th>
+                                    <th>الحالة</th>
+                                    <th>الوصف</th>
+                                    <th>الملاحظات</th>
+                                    <th>الإجراءات</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {records.map(reg => (
+                                    <tr key={reg.action_id}>
+                                        <td>{reg.action_type}</td>
+                                        <td>{reg.action_number}</td>
+                                        <td>{reg.referral_date ? new Date(reg.referral_date).toLocaleDateString('ar-EG') : '-'}</td>
+                                        <td>{reg.decision_date ? new Date(reg.decision_date).toLocaleDateString('ar-EG') : '-'}</td>
+                                        <td>{reg.duration_days} يوم</td>
+                                        <td>{reg.authority}</td>
+                                        <td>{reg.status}</td>
+                                        <td><div className={styles.truncate}>{reg.description}</div></td>
+                                        <td><div className={styles.truncate}>{reg.notes}</div></td>
+                                        <td>
+                                            <button onClick={() => handleDelete(reg.action_id)} className={styles.delBtn}>حذف</button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 )}
             </Card>
         </div>

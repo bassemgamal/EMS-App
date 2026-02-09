@@ -13,6 +13,28 @@
     grid-column: span 2;
 }
 
+.tableResponsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.truncate {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.delBtn {
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delBtn:hover {
+    text-decoration: underline;
+}
+
 .saveBtn {
     grid-column: span 2;
     background: var(--primary);

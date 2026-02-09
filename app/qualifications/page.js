@@ -6,6 +6,24 @@ import Card from '@/components/Card';
 import FormField from '@/components/FormField';
 import styles from './page.module.css';
 
+const QUAL_TYPES = [
+    { label: '--- اختر النوع ---', value: '' },
+    { label: 'بكالوريوس', value: 'بكالوريوس' },
+    { label: 'ليسانس', value: 'ليسانس' },
+    { label: 'ماجستير', value: 'ماجستير' },
+    { label: 'دكتوراه', value: 'دكتوراه' },
+    { label: 'دبلوم', value: 'دبلوم' },
+    { label: 'ثانوية عامة', value: 'ثانوية عامة' }
+];
+
+const QUAL_LEVEL_OPTIONS = [
+    { label: '--- اختر المستوى ---', value: '' },
+    { label: 'ممتاز', value: 'ممتاز' },
+    { label: 'جيد جداً', value: 'جيد جداً' },
+    { label: 'جيد', value: 'جيد' },
+    { label: 'مقبول', value: 'مقبول' }
+];
+
 export default function QualificationsPage() {
     const { activeEmployee } = useEmployee();
     const [records, setRecords] = useState([]);
@@ -68,11 +86,11 @@ export default function QualificationsPage() {
             <div className={styles.layout}>
                 <Card title="إضافة مؤهل">
                     <form onSubmit={handleAdd} className={styles.grid}>
-                        <FormField label="النوع" value={newData.qualification_type} onChange={(e) => setNewData({ ...newData, qualification_type: e.target.value })} />
+                        <FormField label="النوع" type="select" options={QUAL_TYPES} value={newData.qualification_type} onChange={(e) => setNewData({ ...newData, qualification_type: e.target.value })} />
                         <FormField label="التخصص" value={newData.qualification_specialization} onChange={(e) => setNewData({ ...newData, qualification_specialization: e.target.value })} />
                         <FormField label="السنة" type="number" value={newData.qualification_year} onChange={(e) => setNewData({ ...newData, qualification_year: e.target.value })} />
                         <FormField label="جهة الصدور" value={newData.qualification_issuer} onChange={(e) => setNewData({ ...newData, qualification_issuer: e.target.value })} />
-                        <FormField label="المستوى" value={newData.qualification_level} onChange={(e) => setNewData({ ...newData, qualification_level: e.target.value })} />
+                        <FormField label="المستوى" type="select" options={QUAL_LEVEL_OPTIONS} value={newData.qualification_level} onChange={(e) => setNewData({ ...newData, qualification_level: e.target.value })} />
                         <button type="submit" className={styles.saveBtn} disabled={saving}>{saving ? 'جاري الإضافة...' : 'إضافة'}</button>
                     </form>
                 </Card>
